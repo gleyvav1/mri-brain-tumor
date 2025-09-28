@@ -9,7 +9,6 @@ import streamlit as st
 import torch, torch.nn as nn
 from torchvision import models, transforms
 import cv2
-import matplotlib.pyplot as plt
 
 # -------------------- Config página --------------------
 st.set_page_config(
@@ -106,7 +105,8 @@ file = st.file_uploader("Sube una imagen (png/jpg/jpeg/tif)", type=["png","jpg",
 
 if file:
     orig = Image.open(file).convert("L")
-    st.image(orig, caption="Imagen cargada", use_container_width=True)
+    # Streamlit 1.35 usa use_column_width (no existe use_container_width)
+    st.image(orig, caption="Imagen cargada", use_column_width=True)
 
     if st.button("🔍 Predecir", use_container_width=True):
         # Preprocesar y predecir
@@ -122,7 +122,7 @@ if file:
             st.error(f"🧠 **Pred: YES** — posible anomalía (prob_yes={p_yes:.3f})")
             # Grad-CAM
             overlay = gradcam_yes_overlay(model, x, orig)
-            st.image(overlay, caption="Regiones de atención (Grad-CAM)", use_container_width=True)
+            st.image(overlay, caption="Regiones de atención (Grad-CAM)", use_column_width=True)
         else:
             st.success(f"✅ **Pred: NO** — sin anomalía (prob_yes={p_yes:.3f})")
 
